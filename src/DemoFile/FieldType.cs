@@ -48,6 +48,13 @@ internal partial record FieldType(string Name, FieldType? GenericParameter, bool
         return new FieldType(Name: name, GenericParameter: genericParam, IsPointer: isPointer, ArrayLength: count);
     }
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex(@"^(?<name>[^\<\[\*]+)(\<\s(?<generic>.*)\s\>)?(?<ptr>\*)?(\[(?<count>.*)\])?$")]
     private static partial Regex TypeNameRegex();
+#else
+    private static readonly Regex s_typeNameRegex =
+        new(pattern: @"^(?<name>[^\<\[\*]+)(\<\s(?<generic>.*)\s\>)?(?<ptr>\*)?(\[(?<count>.*)\])?$",
+            options: RegexOptions.Compiled);
+    private static Regex TypeNameRegex() => s_typeNameRegex;
+#endif
 }
