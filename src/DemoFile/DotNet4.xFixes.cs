@@ -1,6 +1,4 @@
-﻿global using Math = DotNet4FixMath;
-
-using Priority_Queue;
+﻿using Priority_Queue;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -170,34 +168,6 @@ public static class DotNet4FixExtensions
             list.Capacity = capacity;
 
         return list.Capacity;
-    }
-}
-
-public static class DotNet4FixMath
-{
-    public static double Log2(double x)
-    {
-        return System.Math.Log(x, 2.0);
-    }
-
-    public static double Ceiling(double a)
-    {
-        return System.Math.Ceiling(a);
-    }
-
-    public static float Max(float val1, float val2)
-    {
-        return System.Math.Max(val1, val2);
-    }
-
-    public static int Max(int val1, int val2)
-    {
-        return System.Math.Max(val1, val2);
-    }
-
-    public static double Sqrt(double d)
-    {
-        return System.Math.Sqrt(d);
     }
 }
 

@@ -122,7 +122,7 @@ public partial class DemoParser
     private void OnServerInfo(CSVCMsg_ServerInfo msg)
     {
         MaxPlayers = msg.MaxClients;
-        _serverClassBits = (int)Math.Log2(msg.MaxClasses) + 1;
+        _serverClassBits = (int)Math.Log(msg.MaxClasses, 2.0) + 1;
     }
 
     private T GetCachedSingletonEntity<T>(ref CHandle<T> handle, Func<T, bool> predicate)

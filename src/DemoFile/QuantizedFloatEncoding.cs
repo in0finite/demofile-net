@@ -65,7 +65,7 @@ internal readonly record struct QuantizedFloatEncoding(
         {
             var delta = Math.Max(1.0f, high - low);
 
-            var deltaLog2 = (int)Math.Ceiling(Math.Log2(delta));
+            var deltaLog2 = (int)Math.Ceiling(Math.Log(delta, 2.0));
             var range = 1 << deltaLog2;
 
             bitCount = Math.Max(bitCount, deltaLog2);
