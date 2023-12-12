@@ -55,7 +55,7 @@ namespace System.Diagnostics.CodeAnalysis
         public bool ReturnValue { get; }
     }
 
-#if NETFRAMEWORK
+#if NETFRAMEWORK || !NETSTANDARD2_1_OR_GREATER
 
     //
     // Summary:
