@@ -28,14 +28,14 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.22.1" />
-    <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
+    <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" Condition="'$(TargetFramework)' == 'netstandard2.1'" />
     <PackageReference Include="protobuf-net" Version="3.2.16" />
     <PackageReference Include="Snappier" Version="1.1.1" />
     <PackageReference Include="Grpc.Tools" Version="2.40.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0" Condition="'$(TargetFramework)' == 'netstandard2.1'" />
   </ItemGroup>
 
   <ItemGroup>
