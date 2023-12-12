@@ -1,4 +1,6 @@
-﻿using Priority_Queue;
+﻿#if NETFRAMEWORK || NETSTANDARD
+
+using Priority_Queue;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -195,3 +197,5 @@ namespace System.Diagnostics
     {
     }
 }
+
+#endif // NETFRAMEWORK || NETSTANDARD
