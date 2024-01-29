@@ -2,6 +2,7 @@
 
 using Priority_Queue;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace System.Runtime.CompilerServices
@@ -170,6 +171,28 @@ public static class DotNet4FixExtensions
             list.Capacity = capacity;
 
         return list.Capacity;
+    }
+
+    public static async ValueTask<int> ReadExactlyAsync(this Stream stream, byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+    {
+        var memory = new Memory<byte>(buffer, offset, length);
+
+        int totalRead = 0;
+        while (totalRead < length)
+        {
+            int read = await stream.ReadAsync(memory[totalRead..], cancellationToken).ConfigureAwait(false);
+            if (read <= 0)
+            {
+                throw new EndOfStreamException();
+            }
+
+            totalRead += read;
+        }
+
+        if (totalRead != length)
+            throw new IOException($"Failed to read exact bytes: {totalRead} / {length}");
+
+        return totalRead;
     }
 }
 
