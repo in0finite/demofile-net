@@ -211,7 +211,7 @@ internal static class Program
 
         try
         {
-            await demo.Start(File.OpenRead(demoPath), cts.Token);
+            await demo.ReadAllAsync(File.OpenRead(demoPath), cts.Token);
         }
         catch (OperationCanceledException) when (cts.IsCancellationRequested)
         {
@@ -293,7 +293,7 @@ internal static class Program
         builder.AppendLine();
         builder.AppendLine("internal partial class DecoderSet");
         builder.AppendLine("{");
-        builder.AppendLine("    public bool TryGetDecoder(string className, [NotNullWhen(true)] out Type? classType, [NotNullWhen(true)] out SendNodeDecoder<object>? decoder)");
+        builder.AppendLine("    public bool TryGetDecoder(string className, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor), NotNullWhen(true)] out Type? classType, [NotNullWhen(true)] out SendNodeDecoder<object>? decoder)");
         builder.AppendLine("    {");
         builder.AppendLine("        switch (className)");
         builder.AppendLine("        {");
@@ -656,7 +656,16 @@ internal static class Program
                     builder.AppendLine($"            var decoder = {decoderMethod}(field.FieldEncodingInfo);");
                     builder.AppendLine($"            return ({classNameCs} @this, ReadOnlySpan<int> path, ref BitBuffer buffer) =>");
                     builder.AppendLine($"            {{");
-                    builder.AppendLine($"                @this.{fieldCsPropertyName} = decoder(ref buffer);");
+
+                    if (serializer == null)
+                    {
+                        builder.AppendLine($"                @this.{fieldCsPropertyName} = decoder(ref buffer);");
+                    }
+                    else
+                    {
+                        builder.AppendLine($"                @this.{fieldCsPropertyName} = decoder(@this, ref buffer);");
+                    }
+
                     builder.AppendLine($"            }};");
                 }
 

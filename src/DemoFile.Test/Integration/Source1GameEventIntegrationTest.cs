@@ -3,11 +3,24 @@ using System.Text.Json;
 
 namespace DemoFile.Test.Integration;
 
-[TestFixture]
+[TestFixture(true)]
+[TestFixture(false)]
 public class Source1GameEventIntegrationTest
 {
-    private static void SetupGameEvent(DemoParser demo, StringBuilder snapshot)
+    private readonly bool _readAll;
+
+    public Source1GameEventIntegrationTest(bool readAll)
     {
+        _readAll = readAll;
+    }
+
+    [Test]
+    public async Task GameEvent()
+    {
+        // Arrange
+        var snapshot = new StringBuilder();
+        var demo = new DemoParser();
+
         demo.Source1GameEvents.Source1GameEvent += e =>
         {
             // Ignore very noisy events
@@ -20,40 +33,22 @@ public class Source1GameEventIntegrationTest
                 .ReplaceLineEndings(Environment.NewLine + "  ");
             snapshot.AppendLine($"  {eventJson}");
         };
-    }
-
-    [Test]
-    public async Task GameEvent()
-    {
-        // Arrange
-        var snapshot = new StringBuilder();
-        var demo = new DemoParser();
-
-        SetupGameEvent(demo, snapshot);
 
         // Act
-        await demo.Start(GotvCompetitiveProtocol13963, default);
+        if (_readAll)
+        {
+            await demo.ReadAllAsync(GotvCompetitiveProtocol13963, default);
+        }
+        else
+        {
+            await demo.StartReadingAsync(GotvCompetitiveProtocol13963, default);
+            while (await demo.MoveNextAsync(default))
+            {
+            }
+        }
 
         // Assert
         Snapshot.Assert(snapshot.ToString());
-    }
-
-    [Test]
-    public void GameEventNonAsync()
-    {
-        // Arrange
-        var snapshot = new StringBuilder();
-        var demo = new DemoParser();
-
-        SetupGameEvent(demo, snapshot);
-
-        // Act
-        demo.StartNonAsync(GotvCompetitiveProtocol13963);
-        while (!demo.ReachedEndOfFile)
-            demo.ReadNext();
-
-        // Assert
-        Snapshot.Assert(snapshot.ToString(), "GameEvent");
     }
 
     [Test]
@@ -79,6 +74,16 @@ public class Source1GameEventIntegrationTest
             Assert.That(e.PlayerPawn, Is.Not.Null);
         };
 
-        await demo.Start(GotvCompetitiveProtocol13963, default);
+        if (_readAll)
+        {
+            await demo.ReadAllAsync(GotvCompetitiveProtocol13963, default);
+        }
+        else
+        {
+            await demo.StartReadingAsync(GotvCompetitiveProtocol13963, default);
+            while (await demo.MoveNextAsync(default))
+            {
+            }
+        }
     }
 }
